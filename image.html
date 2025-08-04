@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Image Gallery</title>
+</head>
+<body>
+<style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background-color: #f0f0f0;
+    }
+
+    h1 {
+      text-align: center;
+      padding: 1rem;
+    }
+
+    .filter-buttons {
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    .filter-buttons button {
+      padding: 10px 20px;
+      margin: 5px;
+      border: none;
+      background-color: #333;
+      color: #fff;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .filter-buttons button:hover {
+      background-color: #555;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 15px;
+      padding: 1rem;
+    }
+
+    .gallery-item {
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+
+    .gallery-item img {
+      width: 100%;
+      height: auto;
+      display: block;
+      transition: transform 0.4s ease;
+    }
+
+    .gallery-item:hover img {
+      transform: scale(1.1);
+    }
+
+    /* Lightbox Styles */
+    .lightbox {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.9);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .lightbox img {
+      max-width: 90%;
+      max-height: 80vh;
+    }
+
+    .lightbox .nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 2rem;
+      color: #fff;
+      cursor: pointer;
+      padding: 10px;
+    }
+
+    .nav.prev {
+      left: 20px;
+    }
+
+    .nav.next {
+      right: 20px;
+    }
+
+    .close {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      font-size: 2rem;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    @media (max-width: 600px) {
+      .lightbox .nav {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+  <h1>Image Gallery</h1>
+
+  <div class="filter-buttons">
+    <button onclick="filterImages('all')">All</button>
+    <button onclick="filterImages('nature')">Nature</button>
+    <button onclick="filterImages('city')">City</button>
+  </div>
+
+  <div class="gallery" id="gallery">
+    <div class="gallery-item nature"><img src="nature1.jpg" alt="Nature 1"></div>
+    <div class="gallery-item city"><img src="city 1.webp" alt="City 1"></div>
+    <div class="gallery-item nature"><img src="nature 2.jpg" alt="Nature 2"></div>
+    <div class="gallery-item city"><img src="city 2.jpeg" alt="City 2"></div>
+    <div class="gallery-item nature"><img src="nature 3.jpeg" alt="Nature 3"></div>
+    <div class="gallery-item city"><img src="city 3.jpeg" alt="City 3"></div>
+  </div>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox">
+    <span class="close" onclick="closeLightbox()">×</span>
+    <span class="nav prev" onclick="changeImage(-1)">❮</span>
+    <img id="lightbox-img" src="" alt="">
+    <span class="nav next" onclick="changeImage(1)">❯</span>
+  </div>
+
+  <script>
+    const galleryItems = document.querySelectorAll('.gallery-item');
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+    let currentIndex = 0;
+
+    // Open lightbox
+    galleryItems.forEach((item, index) => {
+      item.addEventListener('click', () => {
+        currentIndex = index;
+        showImage();
+        lightbox.style.display = 'flex';
+      });
+    });
+
+    function showImage() {
+      const img = galleryItems[currentIndex].querySelector('img');
+      lightboxImg.src = img.src;
+    }
+
+    function closeLightbox() {
+      lightbox.style.display = 'none';
+    }
+
+    function changeImage(direction) {
+      currentIndex += direction;
+      if (currentIndex < 0) currentIndex = galleryItems.length - 1;
+      if (currentIndex >= galleryItems.length) currentIndex = 0;
+      showImage();
+    }
+
+    // Category Filter
+    function filterImages(category) {
+      galleryItems.forEach(item => {
+        if (category === 'all' || item.classList.contains(category)) {
+          item.style.display = 'block';
+        } else {
+          item.style.display = 'none';
+        }
+      });
+    }
+  </script>
+
+</body>
+</html>
